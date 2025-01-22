@@ -9,6 +9,11 @@
 .history
 .svn/
 
+*.ico
+*.pdf
+*.png
+*.gif
+
 # IntelliJ related
 *.iml
 *.ipr
