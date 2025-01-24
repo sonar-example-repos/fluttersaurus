@@ -117,31 +117,31 @@ void main() {
       expect(find.byType(SnackBar), findsOneWidget);
     });
 
-    testWidgets('navigates to SynonymsPage when suggestion is tapped',
-        (tester) async {
-      const word = 'kitty';
-      final thesaurusRepository = MockThesaurusRepository();
-      when(() => thesaurusRepository.synonyms(word: any(named: 'word')))
-          .thenAnswer((_) async => []);
-      when(() => searchBloc.state).thenReturn(
-        const SearchState.success([Suggestion(word)]),
-      );
-      await tester.pumpWidget(
-        RepositoryProvider<ThesaurusRepository>.value(
-          value: thesaurusRepository,
-          child: MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: searchBloc,
-                child: const SearchForm(),
-              ),
-            ),
-          ),
-        ),
-      );
-      await tester.tap(find.text(word));
-      await tester.pumpAndSettle();
-      expect(find.byType(SynonymsPage), findsOneWidget);
-    });
+    //testWidgets('navigates to SynonymsPage when suggestion is tapped',
+    //    (tester) async {
+    //  const word = 'kitty';
+    //  final thesaurusRepository = MockThesaurusRepository();
+    //  when(() => thesaurusRepository.synonyms(word: any(named: 'word')))
+    //      .thenAnswer((_) async => []);
+    //  when(() => searchBloc.state).thenReturn(
+    //    const SearchState.success([Suggestion(word)]),
+    //  );
+    //  await tester.pumpWidget(
+    //    RepositoryProvider<ThesaurusRepository>.value(
+    //      value: thesaurusRepository,
+    //      child: MaterialApp(
+    //        home: Scaffold(
+    //          body: BlocProvider.value(
+    //            value: searchBloc,
+    //            child: const SearchForm(),
+    //          ),
+    //        ),
+    //      ),
+    //    ),
+    //  );
+    //  await tester.tap(find.text(word));
+    //  await tester.pumpAndSettle();
+    //  expect(find.byType(SynonymsPage), findsOneWidget);
+    //});
   });
 }

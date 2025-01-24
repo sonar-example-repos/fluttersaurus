@@ -9,10 +9,19 @@
 .history
 .svn/
 
+<<<<<<< HEAD
 *.ico
 *.pdf
 *.png
 *.gif
+=======
+*.png
+*.gif
+*.pdf
+*.ico
+
+.scannerwork/
+>>>>>>> bb15d14 (update)
 
 # IntelliJ related
 *.iml
