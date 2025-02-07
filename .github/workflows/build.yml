@@ -1,0 +1,36 @@
+name: Build
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - uses: dart-lang/setup-dart@v1
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: pubspec.yaml
+      - name: Get Flutter and Dart Paths
+        run: |
+          flutter --version
+      - name: Set the stage
+        run: |
+          flutter packages get
+          dart format --set-exit-if-changed lib test
+          flutter analyze lib test
+      - name: Get Flutter coverage
+        run: |
+          flutter test --no-pub --coverage --test-randomize-ordering-seed random
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
