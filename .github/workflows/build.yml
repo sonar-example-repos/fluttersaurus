@@ -18,13 +18,11 @@ jobs:
         id: flutter-action
         uses: subosito/flutter-action@v2
         with:
-          architecture: x64
           channel: stable
           flutter-version-file: pubspec.yaml
       - name: Get Flutter and Dart Paths
         run: | # See https://github.com/subosito/flutter-action/discussions/197
-          act --container-architecture linux/arm64
-          git config --global --add safe.directory /opt/hostedtoolcache/flutter/${{ steps.flutter-action.outputs.CHANNEL }}-${{ steps.flutter-action.outputs.VERSION }}-${{ steps.flutter-action.outputs.ARCHITECTURE }}
+          # git config --global --add safe.directory /opt/hostedtoolcache/flutter/${{ steps.flutter-action.outputs.CHANNEL }}-${{ steps.flutter-action.outputs.VERSION }}-${{ steps.flutter-action.outputs.ARCHITECTURE }}
           flutter --version
       - name: Set the stage
         run: |
