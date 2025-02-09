@@ -32,7 +32,15 @@ jobs:
       - name: Get Flutter coverage
         run: |
           flutter test --no-pub --coverage --test-randomize-ordering-seed random
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4.7.0
+        with:
+          java-version: 17
+          distribution: temurin
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: -Dsonar.scanner.skipJreProvisioning=true
+          
