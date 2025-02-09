@@ -13,7 +13,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-      - uses: dart-lang/setup-dart@v1
       - uses: subosito/flutter-action@v2.7.1 # see https://github.com/rrousselGit/riverpod/blob/master/.github/workflows/build.yml for similar build
         with:
           channel: stable
@@ -35,4 +34,4 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
-          args: -Dsonar.c.file.suffixes=- -Dsonar.cpp.file.suffixes=- -Dsonar.objc.file.suffixes=-
+          args: -Dsonar.c.file.suffixes=- -Dsonar.cpp.file.suffixes=- -Dsonar.objc.file.suffixes=- -Dsonar.dart.lcov.reportPaths=coverage/lcov.info
