@@ -41,6 +41,5 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        with:
-          args: -Dsonar.scanner.skipJreProvisioning=true
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
           
