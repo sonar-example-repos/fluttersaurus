@@ -14,13 +14,10 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - uses: dart-lang/setup-dart@v1
-      - uses: subosito/flutter-action@v2.7.1
+      - uses: subosito/flutter-action@v2.7.1 # see https://github.com/rrousselGit/riverpod/blob/master/.github/workflows/build.yml for similar build
         with:
           channel: stable
           flutter-version-file: pubspec.yaml
-      # - run: |
-      #    git config --global --add safe.directory /opt/hostedtoolcache/flutter/stable-3.27.0-x64
-      #    flutter build bundle
       - name: Get Flutter version
         run: |
           flutter --version
@@ -32,15 +29,10 @@ jobs:
       - name: Get Flutter coverage
         run: |
           flutter test --no-pub --coverage --test-randomize-ordering-seed random
-      - name: Setup Java JDK
-        uses: actions/setup-java@v4.7.0
-        with:
-          java-version: 17
-          distribution: temurin
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         with:
-          args: -Dsonar.cpp.file.suffixes=- -Dsonar.objc.file.suffixes=- -Dsonar.objc.file.suffixes=-
+          args: -Dsonar.c.file.suffixes=- -Dsonar.cpp.file.suffixes=- -Dsonar.objc.file.suffixes=-
