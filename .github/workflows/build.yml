@@ -14,15 +14,6 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - uses: dart-lang/setup-dart@v1
-      # - name: Set up Flutter
-      #   id: flutter-action
-      #   uses: subosito/flutter-action@v2
-      #   with:
-      #     channel: stable
-      #     flutter-version-file: pubspec.yaml
-      # - name: Get Flutter and Dart Paths
-      #   run: | # See https://github.com/subosito/flutter-action/discussions/197 # git config --global --add safe.directory /opt/hostedtoolcache/flutter/${{ steps.flutter-action.outputs.CHANNEL }}-${{ steps.flutter-action.outputs.VERSION }}-${{ steps.flutter-action.outputs.ARCHITECTURE }} 
-      #     flutter --version 
       - uses: subosito/flutter-action@v2.7.1
         with:
           channel: stable
