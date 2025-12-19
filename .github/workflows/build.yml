@@ -10,9 +10,9 @@ jobs:
     name: SonarQube
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
-          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+          fetch-depth: 0
       - uses: subosito/flutter-action@v2.7.1 # see https://github.com/rrousselGit/riverpod/blob/master/.github/workflows/build.yml for similar build
         with:
           channel: stable
@@ -29,7 +29,7 @@ jobs:
         run: |
           flutter test --no-pub --coverage --test-randomize-ordering-seed random
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v4
+        uses: SonarSource/sonarqube-scan-action@v7
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
