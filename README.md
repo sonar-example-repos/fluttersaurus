@@ -24,3 +24,4 @@ A Flutter Thesaurus that uses the [Datamuse API](http://www.datamuse.com/api).
         </td>
     </tr>
 </table>
+
