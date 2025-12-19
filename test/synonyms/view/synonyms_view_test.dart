@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,28 +13,31 @@ import 'package:mocktail/mocktail.dart';
 class MockSynonymsCubit extends MockCubit<SynonymsState>
     implements SynonymsCubit {}
 
-class TestAssetBundle extends CachingAssetBundle {
-  @override
-  Future<String> loadString(String key, {bool cache = true}) async {
-    return '{}';
-  }
-
-  @override
-  Future<ByteData> load(String key) async {
-    return ByteData(0);
-  }
+ByteData _createEmptyAssetManifestBin() {
+  final buffer = WriteBuffer();
+  const StandardMessageCodec().writeValue(buffer, <String, dynamic>{});
+  return buffer.done();
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   GoogleFonts.config.allowRuntimeFetching = false;
+
+  setUpAll(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMessageHandler('flutter/assets', (message) async {
+      final key = utf8.decode(message!.buffer.asUint8List());
+      if (key.contains('AssetManifest.bin')) {
+        return _createEmptyAssetManifestBin();
+      }
+      return ByteData.sublistView(utf8.encode('{}'));
+    });
+    registerFallbackValue(const SynonymsState.loading());
+  });
 
   group('SynonymsView', () {
     const word = 'flutter';
     late SynonymsCubit synonymsCubit;
-
-    setUpAll(() {
-      registerFallbackValue(const SynonymsState.loading());
-    });
 
     setUp(() {
       synonymsCubit = MockSynonymsCubit();
@@ -44,14 +50,11 @@ void main() {
         const SynonymsState.loading(word: word),
       );
       await tester.pumpWidget(
-        DefaultAssetBundle(
-          bundle: TestAssetBundle(),
-          child: MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: synonymsCubit,
-                child: const SynonymsView(),
-              ),
+        MaterialApp(
+          home: Scaffold(
+            body: BlocProvider.value(
+              value: synonymsCubit,
+              child: const SynonymsView(),
             ),
           ),
         ),
@@ -65,14 +68,11 @@ void main() {
         const SynonymsState.success(word: word, synonyms: []),
       );
       await tester.pumpWidget(
-        DefaultAssetBundle(
-          bundle: TestAssetBundle(),
-          child: MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: synonymsCubit,
-                child: const SynonymsView(),
-              ),
+        MaterialApp(
+          home: Scaffold(
+            body: BlocProvider.value(
+              value: synonymsCubit,
+              child: const SynonymsView(),
             ),
           ),
         ),
@@ -88,14 +88,11 @@ void main() {
         SynonymsState.success(word: word, synonyms: synonyms),
       );
       await tester.pumpWidget(
-        DefaultAssetBundle(
-          bundle: TestAssetBundle(),
-          child: MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: synonymsCubit,
-                child: const SynonymsView(),
-              ),
+        MaterialApp(
+          home: Scaffold(
+            body: BlocProvider.value(
+              value: synonymsCubit,
+              child: const SynonymsView(),
             ),
           ),
         ),
@@ -109,14 +106,11 @@ void main() {
         (tester) async {
       when(() => synonymsCubit.state).thenReturn(const SynonymsState.failure());
       await tester.pumpWidget(
-        DefaultAssetBundle(
-          bundle: TestAssetBundle(),
-          child: MaterialApp(
-            home: Scaffold(
-              body: BlocProvider.value(
-                value: synonymsCubit,
-                child: const SynonymsView(),
-              ),
+        MaterialApp(
+          home: Scaffold(
+            body: BlocProvider.value(
+              value: synonymsCubit,
+              child: const SynonymsView(),
             ),
           ),
         ),

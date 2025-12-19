@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,20 +12,26 @@ import 'package:thesaurus_repository/thesaurus_repository.dart';
 
 class MockThesaurusRepository extends Mock implements ThesaurusRepository {}
 
-class TestAssetBundle extends CachingAssetBundle {
-  @override
-  Future<String> loadString(String key, {bool cache = true}) async {
-    return '{}';
-  }
-
-  @override
-  Future<ByteData> load(String key) async {
-    return ByteData(0);
-  }
+ByteData _createEmptyAssetManifestBin() {
+  final buffer = WriteBuffer();
+  const StandardMessageCodec().writeValue(buffer, <String, dynamic>{});
+  return buffer.done();
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   GoogleFonts.config.allowRuntimeFetching = false;
+
+  setUpAll(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMessageHandler('flutter/assets', (message) async {
+      final key = utf8.decode(message!.buffer.asUint8List());
+      if (key.contains('AssetManifest.bin')) {
+        return _createEmptyAssetManifestBin();
+      }
+      return ByteData.sublistView(utf8.encode('{}'));
+    });
+  });
 
   group('SynonymsPage', () {
     const word = 'flutter';
@@ -36,13 +45,10 @@ void main() {
 
     testWidgets('renders a SynonymsView', (tester) async {
       await tester.pumpWidget(
-        DefaultAssetBundle(
-          bundle: TestAssetBundle(),
-          child: RepositoryProvider.value(
-            value: thesaurusRepository,
-            child: MaterialApp(
-              onGenerateRoute: (_) => SynonymsPage.route(word: word),
-            ),
+        RepositoryProvider.value(
+          value: thesaurusRepository,
+          child: MaterialApp(
+            onGenerateRoute: (_) => SynonymsPage.route(word: word),
           ),
         ),
       );
@@ -52,13 +58,10 @@ void main() {
 
     testWidgets('requests synonyms', (tester) async {
       await tester.pumpWidget(
-        DefaultAssetBundle(
-          bundle: TestAssetBundle(),
-          child: RepositoryProvider.value(
-            value: thesaurusRepository,
-            child: MaterialApp(
-              onGenerateRoute: (_) => SynonymsPage.route(word: word),
-            ),
+        RepositoryProvider.value(
+          value: thesaurusRepository,
+          child: MaterialApp(
+            onGenerateRoute: (_) => SynonymsPage.route(word: word),
           ),
         ),
       );
