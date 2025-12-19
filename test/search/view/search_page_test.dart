@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fluttersaurus/search/search.dart';
@@ -7,6 +8,18 @@ import 'package:mocktail/mocktail.dart';
 import 'package:thesaurus_repository/thesaurus_repository.dart';
 
 class MockThesaurusRepository extends Mock implements ThesaurusRepository {}
+
+class TestAssetBundle extends CachingAssetBundle {
+  @override
+  Future<String> loadString(String key, {bool cache = true}) async {
+    return '{}';
+  }
+
+  @override
+  Future<ByteData> load(String key) async {
+    return ByteData(0);
+  }
+}
 
 void main() {
   GoogleFonts.config.allowRuntimeFetching = false;
@@ -22,9 +35,12 @@ void main() {
 
     testWidgets('renders a SearchForm', (tester) async {
       await tester.pumpWidget(
-        RepositoryProvider.value(
-          value: thesaurusRepository,
-          child: const MaterialApp(home: SearchPage()),
+        DefaultAssetBundle(
+          bundle: TestAssetBundle(),
+          child: RepositoryProvider.value(
+            value: thesaurusRepository,
+            child: const MaterialApp(home: SearchPage()),
+          ),
         ),
       );
       await tester.pumpAndSettle();

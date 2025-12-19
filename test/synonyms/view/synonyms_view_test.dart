@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fluttersaurus/synonyms/synonyms.dart';
@@ -8,6 +9,18 @@ import 'package:mocktail/mocktail.dart';
 
 class MockSynonymsCubit extends MockCubit<SynonymsState>
     implements SynonymsCubit {}
+
+class TestAssetBundle extends CachingAssetBundle {
+  @override
+  Future<String> loadString(String key, {bool cache = true}) async {
+    return '{}';
+  }
+
+  @override
+  Future<ByteData> load(String key) async {
+    return ByteData(0);
+  }
+}
 
 void main() {
   GoogleFonts.config.allowRuntimeFetching = false;
@@ -31,11 +44,14 @@ void main() {
         const SynonymsState.loading(word: word),
       );
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: BlocProvider.value(
-              value: synonymsCubit,
-              child: const SynonymsView(),
+        DefaultAssetBundle(
+          bundle: TestAssetBundle(),
+          child: MaterialApp(
+            home: Scaffold(
+              body: BlocProvider.value(
+                value: synonymsCubit,
+                child: const SynonymsView(),
+              ),
             ),
           ),
         ),
@@ -49,11 +65,14 @@ void main() {
         const SynonymsState.success(word: word, synonyms: []),
       );
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: BlocProvider.value(
-              value: synonymsCubit,
-              child: const SynonymsView(),
+        DefaultAssetBundle(
+          bundle: TestAssetBundle(),
+          child: MaterialApp(
+            home: Scaffold(
+              body: BlocProvider.value(
+                value: synonymsCubit,
+                child: const SynonymsView(),
+              ),
             ),
           ),
         ),
@@ -69,11 +88,14 @@ void main() {
         SynonymsState.success(word: word, synonyms: synonyms),
       );
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: BlocProvider.value(
-              value: synonymsCubit,
-              child: const SynonymsView(),
+        DefaultAssetBundle(
+          bundle: TestAssetBundle(),
+          child: MaterialApp(
+            home: Scaffold(
+              body: BlocProvider.value(
+                value: synonymsCubit,
+                child: const SynonymsView(),
+              ),
             ),
           ),
         ),
@@ -87,11 +109,14 @@ void main() {
         (tester) async {
       when(() => synonymsCubit.state).thenReturn(const SynonymsState.failure());
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: BlocProvider.value(
-              value: synonymsCubit,
-              child: const SynonymsView(),
+        DefaultAssetBundle(
+          bundle: TestAssetBundle(),
+          child: MaterialApp(
+            home: Scaffold(
+              body: BlocProvider.value(
+                value: synonymsCubit,
+                child: const SynonymsView(),
+              ),
             ),
           ),
         ),

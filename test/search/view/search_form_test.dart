@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fluttersaurus/search/search.dart';
@@ -11,6 +12,18 @@ class MockThesaurusRepository extends Mock implements ThesaurusRepository {}
 
 class MockSearchBloc extends MockBloc<SearchEvent, SearchState>
     implements SearchBloc {}
+
+class TestAssetBundle extends CachingAssetBundle {
+  @override
+  Future<String> loadString(String key, {bool cache = true}) async {
+    return '{}';
+  }
+
+  @override
+  Future<ByteData> load(String key) async {
+    return ByteData(0);
+  }
+}
 
 void main() {
   GoogleFonts.config.allowRuntimeFetching = false;
@@ -31,11 +44,14 @@ void main() {
     testWidgets('adds SearchTermChanged when text is entered', (tester) async {
       const term = 'cats';
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: BlocProvider.value(
-              value: searchBloc,
-              child: const SearchForm(),
+        DefaultAssetBundle(
+          bundle: TestAssetBundle(),
+          child: MaterialApp(
+            home: Scaffold(
+              body: BlocProvider.value(
+                value: searchBloc,
+                child: const SearchForm(),
+              ),
             ),
           ),
         ),
@@ -52,11 +68,14 @@ void main() {
     testWidgets('renders initial text when state is initial', (tester) async {
       when(() => searchBloc.state).thenReturn(const SearchState.initial());
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: BlocProvider.value(
-              value: searchBloc,
-              child: const SearchForm(),
+        DefaultAssetBundle(
+          bundle: TestAssetBundle(),
+          child: MaterialApp(
+            home: Scaffold(
+              body: BlocProvider.value(
+                value: searchBloc,
+                child: const SearchForm(),
+              ),
             ),
           ),
         ),
@@ -68,11 +87,14 @@ void main() {
         (tester) async {
       when(() => searchBloc.state).thenReturn(const SearchState.loading());
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: BlocProvider.value(
-              value: searchBloc,
-              child: const SearchForm(),
+        DefaultAssetBundle(
+          bundle: TestAssetBundle(),
+          child: MaterialApp(
+            home: Scaffold(
+              body: BlocProvider.value(
+                value: searchBloc,
+                child: const SearchForm(),
+              ),
             ),
           ),
         ),
@@ -83,11 +105,14 @@ void main() {
     testWidgets('renders SearchResults when state is success', (tester) async {
       when(() => searchBloc.state).thenReturn(const SearchState.success([]));
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: BlocProvider.value(
-              value: searchBloc,
-              child: const SearchForm(),
+        DefaultAssetBundle(
+          bundle: TestAssetBundle(),
+          child: MaterialApp(
+            home: Scaffold(
+              body: BlocProvider.value(
+                value: searchBloc,
+                child: const SearchForm(),
+              ),
             ),
           ),
         ),
@@ -105,11 +130,14 @@ void main() {
       );
 
       await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: BlocProvider.value(
-              value: searchBloc,
-              child: const SearchForm(),
+        DefaultAssetBundle(
+          bundle: TestAssetBundle(),
+          child: MaterialApp(
+            home: Scaffold(
+              body: BlocProvider.value(
+                value: searchBloc,
+                child: const SearchForm(),
+              ),
             ),
           ),
         ),
