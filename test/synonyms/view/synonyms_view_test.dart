@@ -10,12 +10,13 @@ class MockSynonymsCubit extends MockCubit<SynonymsState>
     implements SynonymsCubit {}
 
 void main() {
+  GoogleFonts.config.allowRuntimeFetching = false;
+
   group('SynonymsView', () {
     const word = 'flutter';
     late SynonymsCubit synonymsCubit;
 
     setUpAll(() {
-      GoogleFonts.config.allowRuntimeFetching = false;
       registerFallbackValue(const SynonymsState.loading());
     });
 

@@ -9,9 +9,7 @@ import 'package:thesaurus_repository/thesaurus_repository.dart';
 class MockThesaurusRepository extends Mock implements ThesaurusRepository {}
 
 void main() {
-  setUpAll(() {
-    GoogleFonts.config.allowRuntimeFetching = false;
-  });
+  GoogleFonts.config.allowRuntimeFetching = false;
 
   group('SearchPage', () {
     late ThesaurusRepository thesaurusRepository;

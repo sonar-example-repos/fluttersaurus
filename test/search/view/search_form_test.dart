@@ -13,11 +13,12 @@ class MockSearchBloc extends MockBloc<SearchEvent, SearchState>
     implements SearchBloc {}
 
 void main() {
+  GoogleFonts.config.allowRuntimeFetching = false;
+
   group('SearchForm', () {
     late SearchBloc searchBloc;
 
     setUpAll(() {
-      GoogleFonts.config.allowRuntimeFetching = false;
       registerFallbackValue(const SearchTermChanged(''));
       registerFallbackValue(const SearchState.initial());
     });

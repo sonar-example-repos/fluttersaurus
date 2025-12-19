@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fluttersaurus/synonyms/synonyms.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:thesaurus_repository/thesaurus_repository.dart';
 
 class MockThesaurusRepository extends Mock implements ThesaurusRepository {}
 
 void main() {
+  GoogleFonts.config.allowRuntimeFetching = false;
+
   group('SynonymsPage', () {
     const word = 'flutter';
     late ThesaurusRepository thesaurusRepository;
