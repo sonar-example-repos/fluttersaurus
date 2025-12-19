@@ -16,7 +16,6 @@ jobs:
       - uses: subosito/flutter-action@v2.7.1 # see https://github.com/rrousselGit/riverpod/blob/master/.github/workflows/build.yml for similar build
         with:
           channel: stable
-          flutter-version-file: pubspec.yaml
       - name: Get Flutter version
         run: |
           flutter --version
